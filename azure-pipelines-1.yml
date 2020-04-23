@@ -59,36 +59,36 @@ stages:
       displayName: 'Upload package'
       artifact: drop
 
-# - stage: Deploy
-#   displayName: 'Deploy Web App'
-#   dependsOn: Build
-#   condition: succeeded()
-#   jobs:
-#   - deployment: DeploymentJob
-#     pool:
-#       vmImage: $(vmImageName)
-#     environment: $(environmentName)
-#     strategy:
-#       runOnce:
-#         deploy:
-#           steps:
+- stage: DeployDev
+  displayName: 'Deploy Web App to Dev'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: DeploymentJob
+    pool:
+      vmImage: $(vmImageName)
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
           
-#           - task: UsePythonVersion@0
-#             inputs:
-#               versionSpec: '$(pythonVersion)'
-#             displayName: 'Use Python version'
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+            displayName: 'Use Python version'
 
-#           - task: AzureWebApp@1
-#             displayName: 'Deploy Azure Web App : bzzzt-flask-dev'
-#             inputs:
-#               azureSubscription: $(azureServiceConnectionId)
-#               resourceGroupName: 'richie.lee_rg_Linux_northeurope'
-#               appName: $(webAppName)
-#               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-#               startUpCommand: 'startup.txt'
-#               appType: webAppLinux
-#               deployToSlotOrASE: true
-#               slotName: dev
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App : bzzzt-flask-dev'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              resourceGroupName: 'richie.lee_rg_Linux_northeurope'
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              startUpCommand: 'startup.txt'
+              appType: webAppLinux
+              deployToSlotOrASE: true
+              slotName: dev
           
           # - task: AzureWebApp@1
           #   displayName: 'Deploy Azure Web App : bzzzt-flask'
@@ -99,11 +99,24 @@ stages:
           #     startUpCommand: 'startup.txt'
           #     appType: webAppLinux
           
-          # - task: AzureAppServiceManage@0
-          #   displayName: 'Swap Slots: bzzzt-flask'
-          #   inputs:
-          #     azureSubscription: 'Visual Studio Enterprise – MPN (01dc6d60-731c-48ec-997f-6002b76ff010)'
-          #     WebAppName: $(webAppName)
-          #     ResourceGroupName: 'richie.lee_rg_Linux_northeurope'
-          #     SourceSlot: dev
+- stage: DeployProd
+  displayName: 'Deploy Web App'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: DeploymentJob
+    pool:
+      vmImage: $(vmImageName)
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureAppServiceManage@0
+            displayName: 'Swap Slots: bzzzt-flask'
+            inputs:
+              azureSubscription: 'Visual Studio Enterprise – MPN (01dc6d60-731c-48ec-997f-6002b76ff010)'
+              WebAppName: $(webAppName)
+              ResourceGroupName: 'richie.lee_rg_Linux_northeurope'
+              SourceSlot: dev
 
