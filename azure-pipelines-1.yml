@@ -87,3 +87,14 @@ stages:
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               startUpCommand: 'startup.txt'
               appType: webAppLinux
+              deployToSlotOrASE: true
+              slotName: dev
+          
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App : bzzzt-flask'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              startUpCommand: 'startup.txt'
+              appType: webAppLinux
