@@ -83,6 +83,7 @@ stages:
             displayName: 'Deploy Azure Web App : bzzzt-flask-dev'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
+              resourceGroupName: 'richie.lee_rg_Linux_northeurope'
               appName: $(webAppName)
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
               startUpCommand: 'startup.txt'
