@@ -1,2 +1,2 @@
-APP_CONFIG_FILE = /wwwroot/config/%PROD_CONFIG_FILE%.py
+export APP_CONFIG_FILE=/home/site/wwwroot/$PROD_CONFIG_FILE.py
 gunicorn --bind=0.0.0.0 --workers=4 startup:app
