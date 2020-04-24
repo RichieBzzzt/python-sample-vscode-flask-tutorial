@@ -2,9 +2,11 @@ from datetime import datetime
 from flask import Flask, render_template
 from . import app
 
+my_env = os.environ['bzzzt']
+
 @app.route("/")
 def home():
-    return render_template("home.html", env = "local")
+    return render_template("home.html", env = my_env)
 
 @app.route("/about/")
 def about():
